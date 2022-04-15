@@ -8,7 +8,7 @@ A CLI used to create and package JAIS apps.
 jap new <app name>
 ```
 
-## Package a app
+## Package an app
 
 ```bash
 jap package --version 0.1.0
