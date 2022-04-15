@@ -2,7 +2,7 @@
 
 A CLI used to create and package JAIS apps.
 
-##Create a new JAIS app
+## Create a new JAIS app
 
 ```bash
 jap new <app name>
