@@ -7,6 +7,14 @@
         <Nullable>enable</Nullable>
         <Title>Jais App Packager</Title>
         <AssemblyName>jap</AssemblyName>
+        <PackageId>Jais.App.Packager</PackageId>
+        <Authors>Julian Baumann</Authors>
+        <RepositoryUrl>https://github.com/carsten-computer-club/JaisAppPackager</RepositoryUrl>
+
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>jap</ToolCommandName>
+        <PackageOutputPath>./nupkg</PackageOutputPath>
+
     </PropertyGroup>
 
     <ItemGroup>
