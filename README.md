@@ -27,7 +27,7 @@ Add the GitHub package registry to your NuGet config.
 
 For more information check [this documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry#authenticating-with-a-personal-access-token)
 
-## Install the template
+## Install the CLI
 
 ```bash
 dotnet tool install --global Jais.App.Packager
