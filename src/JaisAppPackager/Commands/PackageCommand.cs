@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using System.Text;
 using System.Text.Json;
 using CliFx;
 using CliFx.Attributes;
@@ -26,6 +27,38 @@ public class PackageCommand : ICommand
         _shellService = shellService;
     }
 
+    private MemoryStream GeneratePackagedAppInfo(ProjectAppInfo projectAppInfo, string dllPath)
+    {
+        var appInfo = new PackagedAppInfo
+        {
+            AppName = projectAppInfo.AppName,
+            Author = projectAppInfo.Author,
+            Version = projectAppInfo.Version,
+            DllPath = dllPath
+        };
+
+        string serialized = JsonSerializer.Serialize(appInfo);
+
+        return new MemoryStream(Encoding.Default.GetBytes(serialized));
+    }
+
+    private void ErrorOutputReceived(string message)
+    {
+        DisplayError(message);
+    }
+
+    private void OutputReceived(string message)
+    {
+        _console.Output.WriteLine(message);
+    }
+
+    private void DisplayError(string message)
+    {
+        _console.ForegroundColor = ConsoleColor.Red;
+        _console.Output.WriteLine(message);
+        _console.ResetColor();
+    }
+
     public async ValueTask ExecuteAsync(IConsole console)
     {
         _console = console;
@@ -38,7 +71,7 @@ public class PackageCommand : ICommand
             return;
         }
 
-        var appInfo = JsonSerializer.Deserialize<AppInfo>(await File.ReadAllTextAsync("AppInfo.json"));
+        var appInfo = JsonSerializer.Deserialize<ProjectAppInfo>(await File.ReadAllTextAsync("AppInfo.json"));
 
         if (appInfo == null)
         {
@@ -73,7 +106,12 @@ public class PackageCommand : ICommand
 
         string[] buildFiles = Directory.GetFiles("build/raw");
 
-        archive.CreateEntryFromFile("AppInfo.json", "AppInfo.json");
+        MemoryStream packagedAppInfo = GeneratePackagedAppInfo(appInfo, $"bin/{appInfo.AppName}.dll");
+
+        ZipArchiveEntry appInfoArchiveFile = archive.CreateEntry("AppInfo.json");
+        await using Stream fileStream = appInfoArchiveFile.Open();
+        await packagedAppInfo.CopyToAsync(fileStream);
+        fileStream.Close();
 
         foreach (string filePath in buildFiles)
         {
@@ -84,7 +122,6 @@ public class PackageCommand : ICommand
 
         archive.Dispose();
 
-
         string zipFilePath = $"{outputDirectory}/{appInfo.AppName}-{version}.jaisapp";
 
         FileStream stream = File.OpenWrite(zipFilePath);
@@ -94,22 +131,5 @@ public class PackageCommand : ICommand
         console.ForegroundColor = ConsoleColor.Green;
         await console.Output.WriteLineAsync($"\nSuccessfully packaged app at {zipFilePath}");
         console.ResetColor();
-    }
-
-    private void ErrorOutputReceived(string message)
-    {
-        DisplayError(message);
-    }
-
-    private void OutputReceived(string message)
-    {
-        _console.Output.WriteLine(message);
-    }
-
-    private void DisplayError(string message)
-    {
-        _console.ForegroundColor = ConsoleColor.Red;
-        _console.Output.WriteLine(message);
-        _console.ResetColor();
     }
 }

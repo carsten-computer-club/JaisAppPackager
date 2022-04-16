@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace JaisAppPackager.Entities;
 
-public record AppInfo
+public record ProjectAppInfo
 {
     [JsonPropertyName("appName")]
     public string? AppName { get; set; }
