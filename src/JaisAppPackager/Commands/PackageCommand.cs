@@ -34,7 +34,8 @@ public class PackageCommand : ICommand
             AppName = projectAppInfo.AppName,
             Author = projectAppInfo.Author,
             Version = version,
-            DllPath = dllPath
+            DllPath = dllPath,
+            BundleId = projectAppInfo.BundleId
         };
 
         string serialized = JsonSerializer.Serialize(appInfo);

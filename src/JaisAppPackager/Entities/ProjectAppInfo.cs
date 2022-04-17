@@ -15,4 +15,7 @@ public record ProjectAppInfo
 
     [JsonPropertyName("buildProject")]
     public string? BuildProject { get; set; }
+
+    [JsonPropertyName("bundleId")]
+    public string? BundleId { get; set; }
 }
