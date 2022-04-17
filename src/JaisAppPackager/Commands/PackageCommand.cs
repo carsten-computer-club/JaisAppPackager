@@ -113,7 +113,7 @@ public class PackageCommand : ICommand
 
         string[] buildFiles = Directory.GetFiles("build/raw");
 
-        MemoryStream packagedAppInfo = GeneratePackagedAppInfo(appInfo, version, $"bin/{appInfo.AppName}.dll");
+        MemoryStream packagedAppInfo = GeneratePackagedAppInfo(appInfo, version, $"Binaries/{appInfo.AppName}.dll");
 
         ZipArchiveEntry appInfoArchiveFile = archive.CreateEntry("AppInfo.json");
         await using Stream fileStream = appInfoArchiveFile.Open();
@@ -124,7 +124,7 @@ public class PackageCommand : ICommand
         {
             string fileName = Path.GetFileName(filePath);
 
-            archive.CreateEntryFromFile(filePath, $"bin/{fileName}");
+            archive.CreateEntryFromFile(filePath, $"Binaries/{fileName}");
         }
 
         archive.Dispose();
