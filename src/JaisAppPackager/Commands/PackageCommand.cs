@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using CliFx;
 using CliFx.Attributes;
+using CliFx.Exceptions;
 using CliFx.Infrastructure;
 using JaisAppPackager.Entities;
 using JaisAppPackager.Services.Shell;
@@ -68,17 +69,17 @@ public class PackageCommand : ICommand
 
         if (files.FirstOrDefault(path => Path.GetFileName(path) == "AppInfo.json") == null)
         {
-            DisplayError("AppInfo.json file not found.\nEnsure you are in the right directory");
-            return;
+            throw new CommandException("AppInfo.json file not found.\nEnsure you are in the right directory");
         }
 
         var appInfo = JsonSerializer.Deserialize<ProjectAppInfo>(await File.ReadAllTextAsync("AppInfo.json"));
 
         if (appInfo == null)
         {
-            DisplayError("Error while trying to parse AppInfo.json");
-            return;
+            throw new CommandException("Error while trying to parse AppInfo.json");
         }
+
+        appInfo.Check();
 
         string version = Version ?? appInfo.Version ?? "0.0.0";
         string outputDirectory = OutputDirectory ?? "build";
@@ -101,6 +102,11 @@ public class PackageCommand : ICommand
             $"{appInfo.BuildProject}",
             OutputReceived,
             ErrorOutputReceived);
+
+        if (result.ExitCode != 0)
+        {
+            throw new CommandException("");
+        }
 
         var memoryStream = new MemoryStream();
         using var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true);
