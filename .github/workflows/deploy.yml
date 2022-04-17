@@ -24,7 +24,7 @@ jobs:
       run: dotnet build -c Release
 
     - name: Pack
-      run: dotnet pack -c Release -p:PackageVersion='${{ github.event.inputs.version }}' --output packages
+      run: dotnet pack -c Release -p:Version='${{ github.event.inputs.version }}' -p:PackageVersion='${{ github.event.inputs.version }}' --output packages
 
     - name: Prepare Registry
       run: dotnet nuget add source --username carsten-computer-club --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/carsten-computer-club/index.json"
