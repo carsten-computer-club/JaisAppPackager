@@ -27,13 +27,13 @@ public class PackageCommand : ICommand
         _shellService = shellService;
     }
 
-    private MemoryStream GeneratePackagedAppInfo(ProjectAppInfo projectAppInfo, string dllPath)
+    private MemoryStream GeneratePackagedAppInfo(ProjectAppInfo projectAppInfo, string version, string dllPath)
     {
         var appInfo = new PackagedAppInfo
         {
             AppName = projectAppInfo.AppName,
             Author = projectAppInfo.Author,
-            Version = projectAppInfo.Version,
+            Version = version,
             DllPath = dllPath
         };
 
@@ -106,7 +106,7 @@ public class PackageCommand : ICommand
 
         string[] buildFiles = Directory.GetFiles("build/raw");
 
-        MemoryStream packagedAppInfo = GeneratePackagedAppInfo(appInfo, $"bin/{appInfo.AppName}.dll");
+        MemoryStream packagedAppInfo = GeneratePackagedAppInfo(appInfo, version, $"bin/{appInfo.AppName}.dll");
 
         ZipArchiveEntry appInfoArchiveFile = archive.CreateEntry("AppInfo.json");
         await using Stream fileStream = appInfoArchiveFile.Open();

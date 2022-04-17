@@ -18,6 +18,7 @@ public class Startup
     {
         services.AddSingleton<NewCommand>();
         services.AddSingleton<PackageCommand>();
+        services.AddSingleton<InstallCommand>();
         services.AddSingleton<IShellService, ShellService>();
     }
 }
