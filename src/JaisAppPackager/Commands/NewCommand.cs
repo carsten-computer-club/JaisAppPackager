@@ -28,7 +28,7 @@ public class NewCommand : ICommand
         if (Name != null)
         {
             string outputDirectory = OutputDirectory ?? Name;
-            await _shellService.Execute($"dotnet new jaisapp --name {Name} --output {outputDirectory}", OutputReceived, ErrorOutputReceived);
+            await _shellService.Execute($"dotnet new jais.solution --name {Name} --output {outputDirectory}", OutputReceived, ErrorOutputReceived);
         }
     }
 

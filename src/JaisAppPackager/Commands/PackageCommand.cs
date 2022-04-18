@@ -93,11 +93,12 @@ public class PackageCommand : ICommand
             "dotnet publish " +
             "-c Release " +
             $"-o {outputDirectory}/raw " +
-            "-r linux-arm " +
-            "-p:PublishReadyToRun=true " +
-            "-p:PublishTrimmed=true " +
-            "--self-contained true " +
+            // "-r linux-arm " +
+            // "-p:PublishReadyToRun=true " +
+            // "-p:PublishTrimmed=true " +
+            // "--self-contained true " +
             $"-p:PackageVersion={version} " +
+            $"-p:Version={version} " +
             "-p:IncludeNativeLibrariesForSelfExtract=true " +
             $"{appInfo.BuildProject}",
             OutputReceived,
